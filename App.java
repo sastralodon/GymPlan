@@ -4,7 +4,15 @@ import java.util.Scanner;
 public class App {
     public static void main(String[] args){
         Scanner sc = new Scanner(System.in);
-        System.out.println("======================================================================================\n                                        GYMPLAN     \n======================================================================================");
+        System.out.println("  /$$$$$$  /$$     /$$ /$$      /$$       /$$$$$$$  /$$                    \n" +
+                " /$$__  $$|  $$   /$$/| $$$    /$$$      | $$__  $$| $$                    \n" +
+                "| $$  \\__/ \\  $$ /$$/ | $$$$  /$$$$      | $$  \\ $$| $$  /$$$$$$  /$$$$$$$ \n" +
+                "| $$ /$$$$  \\  $$$$/  | $$ $$/$$ $$      | $$$$$$$/| $$ |____  $$| $$__  $$\n" +
+                "| $$|_  $$   \\  $$/   | $$  $$$| $$      | $$____/ | $$  /$$$$$$$| $$  \\ $$\n" +
+                "| $$  \\ $$    | $$    | $$\\  $ | $$      | $$      | $$ /$$__  $$| $$  | $$\n" +
+                "|  $$$$$$/    | $$    | $$ \\/  | $$      | $$      | $$|  $$$$$$$| $$  | $$\n" +
+                " \\______/     |__/    |__/     |__/      |__/      |__/ \\_______/|__/  |__/\n"
+                );
         System.out.print("Nama : ");
         String nama = sc.nextLine();
 
@@ -17,7 +25,7 @@ public class App {
         System.out.print("Tinggi (cm): ");
         double height = sc.nextDouble();
 
-        
+
         System.out.print("Lemak tubuh (%): ");
         int bodyfat = sc.nextInt();
 
