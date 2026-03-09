@@ -1,63 +1,80 @@
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
-public class App {
-    public static void main(String[] args){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("  /$$$$$$  /$$     /$$ /$$      /$$       /$$$$$$$  /$$                    \n" +
-                " /$$__  $$|  $$   /$$/| $$$    /$$$      | $$__  $$| $$                    \n" +
-                "| $$  \\__/ \\  $$ /$$/ | $$$$  /$$$$      | $$  \\ $$| $$  /$$$$$$  /$$$$$$$ \n" +
-                "| $$ /$$$$  \\  $$$$/  | $$ $$/$$ $$      | $$$$$$$/| $$ |____  $$| $$__  $$\n" +
-                "| $$|_  $$   \\  $$/   | $$  $$$| $$      | $$____/ | $$  /$$$$$$$| $$  \\ $$\n" +
-                "| $$  \\ $$    | $$    | $$\\  $ | $$      | $$      | $$ /$$__  $$| $$  | $$\n" +
-                "|  $$$$$$/    | $$    | $$ \\/  | $$      | $$      | $$|  $$$$$$$| $$  | $$\n" +
-                " \\______/     |__/    |__/     |__/      |__/      |__/ \\_______/|__/  |__/\n"
-                );
-        System.out.print("Nama : ");
-        String nama = sc.nextLine();
+public class Profile {
 
-        System.out.print("Gender (M/F): ");
-        String gender = sc.nextLine();
+    private String name;
+    private String gender;
+    private double weight;
+    private double height;
+    private int age;
+    private double bodyFat;
 
-        System.out.print("Berat (kg): ");
-        double weight = sc.nextDouble();
+    private String goal;
 
-        System.out.print("Tinggi (cm): ");
-        double height = sc.nextDouble();
-
-
-        System.out.print("Lemak tubuh (%): ");
-        int bodyfat = sc.nextInt();
-
-        System.out.print("Umur: ");
-        int age = sc.nextInt();
-
-        System.out.print("Frekuensi latihan per minggu (1-6): ");
-        int freq = sc.nextInt();
-
-        if(freq < 1){
-            System.out.println("[!] Frekuensi latihan tidak bisa kurang dari 1");
-        }
-        if(freq > 6){
-            System.out.println("[!] Frekuensi latihan tidak bisa lebih dari 6");
-        }
-
-        Profile user = new Profile(nama, weight, height, bodyfat, age, freq, gender);
-        Map<String, Double> makro = user.calculate();
-        String goal = user.Goal();
-
-        System.out.println("==============================      HASIL ANALISIS     ================================");
-        System.out.printf("Nama                 : %s", nama);
-        System.out.printf("\nBMI                  : %.0f (%s)", user.bmi(), user.bmiStatus());
-        System.out.printf("\nBodyfat              : %s (%d%%)", user.fatStatus(), bodyfat);
-        System.out.printf("\nRekomendasi Goal     : %s", goal);
-        System.out.println("\n==========================      KEBUTUHAN NUTRISI HARIAN     ===========================");
-        System.out.printf("Target Kalori        : %.0f kkal/hari", makro.get("calories"));
-        System.out.printf("\nProtein              : %.0f gram/hari", makro.get("protein"));
-        System.out.printf("\nKarbo                : %.0f gram/hari", makro.get("carbs"));
-        System.out.printf("\nLemak                : %.0f gram/hari", makro.get("fat"));
-        System.out.println("\n==========================          JADWAL LATIHAN          ===========================");
-        System.out.println("COMMING SOOOOOONNNNNNN!!!!!!!!!");
+    public Profile(String name, String gender, double weight, double height, int age, double bodyFat) {
+        this.name = name;
+        this.gender = gender;
+        this.weight = weight;
+        this.height = height;
+        this.age = age;
+        this.bodyFat = bodyFat;
     }
 
+    public Map<String, Double> calculate() {
+        Map<String, Double> map = new HashMap<>();
+
+        double heightMeter = height / 100.0;
+        double bmi = weight / (heightMeter * heightMeter);
+
+        double bmr;
+        if (gender.equalsIgnoreCase("M")) {
+            bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+        } else {
+
+            bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+        }
+        double tdee = bmr * 1.5;
+        this.goal = decideGoal(bmi, bodyFat);
+
+
+        double targetCalories;
+        if (goal.equals("Cutting")) {
+            targetCalories = tdee - 300;
+        } else if (goal.equals("Bulking")) {
+            targetCalories = tdee + 250;
+        } else {
+            targetCalories = tdee;
+        }
+
+
+        double protein = weight * 2.0;
+        double fat = weight * 0.8;
+        double remainingCalories = targetCalories - (protein * 4 + fat * 9);
+        double carbs = remainingCalories / 4;
+
+        map.put("BMI", bmi);
+        map.put("BMR", bmr);
+        map.put("TDEE", tdee);
+        map.put("TargetCalories", targetCalories);
+        map.put("Protein", protein);
+        map.put("Carbs", carbs);
+        map.put("Fat", fat);
+
+        return map;
+    }
+
+    private String decideGoal(double bmi, double bf) {
+        if (bf > 25 || bmi >= 27) {
+            return "Cutting";
+        } else if (bf < 15 && bmi <= 23) {
+            return "Bulking";
+        } else {
+            return "Recomposition";
+        }
+    }
+
+    public String getGoal() {
+        return goal;
+    }
 }
